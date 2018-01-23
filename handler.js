@@ -2,17 +2,23 @@
 
 const HelloWorld = require('./lib/hello-world');
 
-module.exports.helloWorld = (event, context, callback) => {
+module.exports = function (context, req, event) {
+    context.log('JavaScript HTTP trigger function processed a request.');
 
-  var hlloWorld = new HelloWorld();
+    var hlloWorld = new HelloWorld();
 
-  const response = {
-    statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-    },
-    body: JSON.stringify(hlloWorld.sayHello(event)),
-  };
-
-  callback(null, response);
+    if (req.query.name || (req.body && req.body.name)) {
+        context.res = {
+            // status: 200, /* Defaults to 200 */
+  //          body: "Hello " + (req.query.name || req.body.name)
+              body: "Hello "+ (req.query.name || req.body.name) + JSON.stringify(hlloWorld.sayHello(event))
+        };
+    }
+    else {
+        context.res = {
+            status: 400,
+            body: "Please pass a name on the query string or in the request body"
+        };
+    }
+    context.done();
 };
