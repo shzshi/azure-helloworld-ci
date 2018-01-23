@@ -1,5 +1,3 @@
-'use strict';
-
 const HelloWorld = require('./lib/hello-world');
 
 module.exports = function (context, req, event) {
